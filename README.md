@@ -4,7 +4,7 @@
 | -------------------------------- | --------- |
 | ![template-matching-performance](data/gifs/template_matching_based.gif) | ![cnn-based-performance](data/gifs/cnn_based.gif) |
 | 😟  | 😘 |
-| very slow (about 2fps) | fast (30fps ~) |
+| very slow (about 5fps) | fast (30fps ~) |
 | not accurate | very accurate |
 | a lot of preprocessing | end-to-end model |
 | prone to weather, obstacles | robust to them |
@@ -91,6 +91,8 @@ model.compile(
 ```
 
 ### Evaluation 
+
+!![IoU](data/misc/evaluation_1.jpg)
 
 | IoU | F1 |
 | --- | --- |
