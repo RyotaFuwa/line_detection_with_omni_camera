@@ -43,5 +43,22 @@ class ConfidenceMap2Scan(NodeInit):
         self.pub.publish(scan)
 
 
+    def transform_to_scan(image, thresh_length=3, height=1.8):
+        scan = [float('inf') for _ in range(720)] # 0 - 720, -180 - 180
+        center = (63, 63)
+        for row in range(len(image)):
+            for col in range(len(image[0])):
+                if row == center[0] and col == center[0]:
+                    continue
+                if not image[row][col]:
+                    continue
+                length, fai = calc(row, col, center, image)
+                fai = fai
+                scan[fai] = min(scan[fai], length)
+        for fai in range(len(scan)):
+            if(scan[fai] > thresh_length):
+                scan[fai] = 0
+        return scan
+
 if __name__ == '__main__':
     ld = ConfidenceMap2Scan(init_params)
