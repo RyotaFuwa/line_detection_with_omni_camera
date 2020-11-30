@@ -25,9 +25,6 @@ class ConfidenceMap2Scan(NodeInit):
         self.bridge = CvBridge()
         super().__init__(init_params)
 
-    def f(self):
-        return None
-
     def callback(self, data):
         try:
             image = self.bridge.imgmsg_to_cv2(data, 'mono8')
