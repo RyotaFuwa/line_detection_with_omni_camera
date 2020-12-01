@@ -18,10 +18,10 @@ class NodeInit(ABC):
        because this constructor calls rospy.spin(), in turn, get into callback loop.
     """
 
-    def __init__(self, init_param):
+    def __init__(self, init_params):
         """initialize a ros node
         Args:
-            init_param: {
+            init_params: {
               node_name: node name
               sub_name: name of topic you'd like to subscribe to
               sub_type: type of subscribe topic
@@ -36,36 +36,45 @@ class NodeInit(ABC):
             self.pub: ros publisher (you can use this in callback)
 
         """
-
+        self.init_params = init_params
         try:
-            rospy.init_node(init_param['node_name'])
+            rospy.init_node(init_params['node_name'])
             try:
-                self.sub = rospy.Subscriber(init_param['sub_name'], init_param['sub_type'], self.callback)
+                self.sub = rospy.Subscriber(init_params['sub_name'], init_params['sub_type'], self.callback)
             except:
-                self.sub = Dummy('Not Defined')
+                self.sub = None
 
             try:
-                self.pub = rospy.Publisher(init_param['pub_name'], init_param['pub_type'], queue_size=5)
+                self.pub = rospy.Publisher(init_params['pub_name'], init_params['pub_type'], queue_size=5)
             except:
-                self.pub = Dummy('Not Defined')
+                self.pub = None
         except:
             raise BaseException("Node Initialization Failed.")
-        finally:
-            print("=========")
-            print("node : {}".format(init_param['node_name']))
-            print("<-----")
-            print("subscriber : {} ".format(self.sub.name))
-            print("----->")
-            print("publisher  : {} ".format(self.pub.name))
-            print("----->")
-            print("=========")
-            if type(self.sub) != Dummy:
-                try:
-                    rospy.spin()
-                except KeyboardInterrupt:
-                    rospy.signal_shutdown("Keyboard Interrupt Occured")
 
-    @abstractmethod
+        print('Node Created Successfully!')
+
+    def run(self):
+        print("=========")
+        print("node : {}".format(self.init_params['node_name']))
+        print("<-----")
+        if self.sub is not None:
+            print("subscriber : {} ".format(self.sub.name))
+        else:
+            print("subscriber : {} ".format('---'))
+        print("----->")
+        if self.pub is not None:
+            print("publisher  : {} ".format(self.pub.name))
+        else:
+            print("publisher  : {} ".format('---'))
+        print("=========")
+        if self.sub is not None:
+            try:
+                rospy.spin()
+            except KeyboardInterrupt:
+                rospy.signal_shutdown("Keyboard Interrupt Occured")
+        if self.pub is not None:
+            self.publish()
+
     def callback(self, data):
         """override this function when you inherit this class
         """
@@ -76,4 +85,8 @@ class NodeInit(ABC):
         pass
 
         # publish
+        pass
+
+    def publish(self, *args, **kwargs):
+        """override this function when you want to publish sth without subscriber"""
         pass

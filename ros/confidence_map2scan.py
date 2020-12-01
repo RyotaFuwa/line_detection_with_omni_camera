@@ -1,14 +1,10 @@
-#!/usr/bin/env python3
-
-# add absolute path to lib
-import sys
-sys.path.insert(0, '/home/kbkn/miniconda3/envs/data-science/lib/python3.8/site-packages')
-
-import rospy
+import numpy as np
 import cv2
 from cv_bridge import CvBridge, CvBridgeError
 from sensor_msgs.msg import Image
 from .scan import Scan
+
+from lib.vector import Vector2D
 from node_init import NodeInit
 
 init_params = {
@@ -31,14 +27,10 @@ class ConfidenceMap2Scan(NodeInit):
         except CvBridgeError as e:
             print(e)
 
-        cv2.imshow('test', image)
-        cv2.waitKey(1)
-
         # write code here.
         scan = self.f()
 
         self.pub.publish(scan)
-
 
     def transform_to_scan(image, thresh_length=3, height=1.8):
         scan = [float('inf') for _ in range(720)] # 0 - 720, -180 - 180
@@ -56,6 +48,7 @@ class ConfidenceMap2Scan(NodeInit):
             if(scan[fai] > thresh_length):
                 scan[fai] = 0
         return scan
+
 
 if __name__ == '__main__':
     ld = ConfidenceMap2Scan(init_params)
