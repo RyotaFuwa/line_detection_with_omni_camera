@@ -45,7 +45,7 @@ class NodeInit(ABC):
                 self.sub = None
 
             try:
-                self.pub = rospy.Publisher(init_params['pub_name'], init_params['pub_type'], queue_size=5)
+                self.pub = rospy.Publisher(init_params['pub_name'], init_params['pub_type'], queue_size=10)
             except:
                 self.pub = None
         except:

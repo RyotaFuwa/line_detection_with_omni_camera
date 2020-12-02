@@ -1,7 +1,7 @@
 import rospy
 from cv_bridge import CvBridge, CvBridgeError
 from sensor_msgs.msg import Image
-from node_init import NodeInit
+from lib.node_init import NodeInit
 import pickle
 
 init_params = {
@@ -19,7 +19,7 @@ class DummyCameraStream(NodeInit):
         super().__init__(init_params)
         self.bridge = CvBridge()
         self.image_list = self.load_ds_as_list(init_params['ds_path'])
-        self.rate = rospy.Rate(15)
+        self.rate = rospy.Rate(2)
 
     def load_ds_as_list(self, ds_path):
         with open('data/misc/image_list', 'rb') as fin:
@@ -43,4 +43,5 @@ class DummyCameraStream(NodeInit):
 
 
 if __name__ == '__main__':
-    dcs = DummyCameraStream(init_params).run()
+    dcs = DummyCameraStream(init_params)
+    dcs.run()

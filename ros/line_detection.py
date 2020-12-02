@@ -1,7 +1,7 @@
 import numpy as np
 from cv_bridge import CvBridge, CvBridgeError
 from sensor_msgs.msg import Image
-from node_init import NodeInit
+from lib.node_init import NodeInit
 from tensorflow.keras.models import load_model
 import cv2
 
@@ -39,7 +39,7 @@ class LineDetectionModel(NodeInit):
         image = (image * 255).astype('uint8')
 
         if self.init_params['debug']:
-            cv2.imshow('test', image)
+            cv2.imshow('confidence_map', image)
             cv2.waitKey(1)
 
         try:
@@ -56,4 +56,5 @@ class LineDetectionModel(NodeInit):
 
 
 if __name__ == '__main__':
-    ld = LineDetectionModel(init_params).run()
+    ld = LineDetectionModel(init_params)
+    ld.run()
